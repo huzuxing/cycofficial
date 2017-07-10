@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyc.dao.CycContentDao">
+    <resultMap id="CycContent" type="CycContent">
+        <id property="id" column="id" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="title" column="title" javaType="String" jdbcType="VARCHAR"/>
+        <result property="description" column="description" javaType="String" jdbcType="VARCHAR"/>
+        <result property="img" column="img" javaType="String" jdbcType="VARCHAR" />
+        <result property="content" column="content" javaType="String" jdbcType="VARCHAR" />
+        <result property="createTime" column="create_time" javaType="Date" jdbcType="TIMESTAMP" />
+        <result property="cate" column="cate" javaType="Integer" jdbcType="INTEGER" />
+        <result property="channelId" column="channel_id" javaType="Integer" jdbcType="INTEGER" />
+    </resultMap>
+    <insert id="save" parameterType="CycContent" keyProperty="id" useGeneratedKeys="true" flushCache="true" statementType="PREPARED">
+        <![CDATA[
+            INSERT INTO cyc_content(title,channel_id, cate, description, img, content, create_time) VALUES (#{title},#{channelId}, #{cate}, #{description}, #{img}, #{content},now())
+        ]]>
+    </insert>
+    <select id="count" resultType="java.lang.Integer">
+        <![CDATA[
+          SELECT count(id) FROM cyc_content o
+        ]]>
+        <where>
+            <if test="null != bean and null != bean.title">
+                o.title=#{bean.title}
+            </if>
+            <if test="null != bean and null != bean.id">
+                AND o.id=#{bean.id}
+            </if>
+            <if test="null != bean and null != bean.channelId">
+                AND o.channel_id=#{bean.channelId}
+            </if>
+        </where>
+    </select>
+    <select id="findContent" resultMap="CycContent">
+        <![CDATA[
+          SELECT * FROM cyc_content o
+        ]]>
+        <where>
+            <if test="null != bean and null != bean.title">
+                o.title=#{title}
+            </if>
+            <if test="null != bean and null != bean.id">
+               AND o.id=#{id}
+            </if>
+            <if test="null != bean and null != bean.channelId">
+                AND o.channel_id=#{bean.channelId}
+            </if>
+        </where>
+        <if test="null != pageNo and null != pageSize">
+              limit #{pageNo},#{pageSize}
+        </if>
+    </select>
+    <delete id="delete" parameterType="java.lang.Integer">
+        <![CDATA[
+          DELETE o FROM cyc_content o WHERE o.id=#{id}
+        ]]>
+    </delete>
+</mapper>

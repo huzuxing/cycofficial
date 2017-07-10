@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<!--
+BeyondAdmin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.2.0
+Version: 1.0.0
+Purchase: http://wrapbootstrap.com
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- Head -->
+<head>
+    <meta charset="utf-8"/>
+    <title>后台管理系统-Banner管理</title>
+    <meta name="description" content="data tables"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!--Basic Styles-->
+    <link href="${base}/css/bootstrap.min.css" rel="stylesheet"/>
+    <link id="bootstrap-rtl-link" href="" rel="stylesheet"/>
+    <link href="${base}/css/font-awesome.min.css" rel="stylesheet"/>
+
+    <!--Beyond styles-->
+    <link id="beyond-link" href="${base}/css/beyond.min.css" rel="stylesheet"/>
+    <link href="${base}/css/demo.min.css" rel="stylesheet"/>
+    <link href="${base}/css/animate.min.css" rel="stylesheet"/>
+    <link id="skin-link" href="" rel="stylesheet" type="text/css"/>
+
+    <!--Skin Script: Place this script in head to load scripts for skins and rtl support-->
+    <style type="text/css">
+        .page-container {
+            display: block;
+            /* margin-left: 224px; */
+            margin-right: 0;
+            margin-top: 0;
+            min-height: 100%;
+            padding: 0;
+        }
+
+        input[type=checkbox] {
+            opacity: 1;
+            position: relative;
+            left: 0px;
+            z-index: 12;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<!-- /Head -->
+<!-- Body -->
+<body>
+<!-- Main Container -->
+<div class="main-container container-fluid">
+    <!-- Page Container -->
+    <div class="page-container">
+        <!-- Page Body -->
+        <div class="page-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs nav-justified" id="myTab5">
+                            <li class="active">
+                                <a data-toggle="tab" href="#gold">
+                                    IOS端
+                                </a>
+                            </li>
+                            <!--<li class="tab-red">
+                                <a data-toggle="tab" href="#sliver">
+                                    Android端
+                                </a>
+                            </li>
+                            <li class="tab-red">
+                                <a data-toggle="tab" href="#copper">
+                                    web端
+                                </a>
+                            </li>-->
+                        </ul>
+                        <div class="tab-content">
+                            <div id="gold" class="tab-pane in active" data-egg-type="2">
+                                <label class="margin-top-10">添加Banner</label>
+                                <div class="goodsAward margin-top-10">
+                                    <div class="row margin-top-10">
+                                        <div class="col-sm-3 text-right">
+                                            <input type="text" name="url" class="url form-control"
+                                                   placeholder="banner链接地址"/>
+                                        </div>
+                                        <div class="col-sm-3" id="filetosubmit">
+                                            <form method="post" action="${base}/fileupload">
+                                                <input type="file" accept="image/*" name="oaUploaded"
+                                                       onchange="previewImage(this);"/>
+                                                <input type="hidden" value="banner" name="dir"/>
+                                            </form>
+                                            <input type="hidden" name="img" value="" class="img fileVal"/>
+                                        </div>
+                                        <div id="preview" class="col-sm-3">
+
+                                        </div>
+                                        <div class="col-sm-1 iconRow" style="height: 34px;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-10">
+                                    <div class="col-sm-12 text-center">
+                                        <a data-cate="0" class="saveBtn btn btn-success"><i
+                                                class="fa fa-fw fa-save"></i>保存设置</a>
+                                        <a class="resetBtn btn btn-danger"><i class="fa fa-fw fa-reply"></i>还原设置</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Body -->
+    </div>
+    <!-- /Page Content -->
+</div>
+<!-- /Page Container -->
+<!-- Main Container -->
+</div>
+</body>
+<!--  /Body -->
+<script type="application/javascript" src="${base}/js/jquery-2.0.3.min.js"></script>
+<script type="application/javascript" src="${base}/js/jquery-form.js"></script>
+<script type="application/javascript" src="${base}/js/layer.js"></script>
+<script type="text/javascript">
+    //图片预览
+    function previewImage(obj) {
+        $(obj).parent().parent().siblings("#preview").empty();
+        if (obj.files) {
+            for (var i = 0; i < obj.files.length; i++) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    var img = "<img width=100 height=100 src='" + event.target.result + "'>&nbsp;&nbsp;&nbsp;<input type='button' class='btn btn-info' value='上传' onclick='upload(this);'/>";
+                    $(obj).parent().parent().siblings("#preview").append(img);
+                }
+                reader.readAsDataURL(obj.files[i]);
+            }
+        }
+    }
+    // 图片上传
+    function upload(obj) {
+        $(obj).parent().siblings("#filetosubmit").find("form").ajaxSubmit({
+            beforeSend: function () {
+                $(this).parents('form').attr('disabled', 'disabled');
+            },
+            success: function (result) {
+                if (result.status) {
+                    layer.alert("图片上传成功!");
+                    $(obj).parent().siblings("#filetosubmit").parent().find('.fileVal').val(result.imgs[0]);
+                } else {
+                    layer.alert('上传图片失败!');
+                }
+            },
+            error: function () {
+                layer.alert('上传图片失败!');
+            },
+            complete: function () {
+                $(this).parents('form').removeAttr('disabled');
+            }
+        });
+    }
+    $(function () {
+        $('.saveBtn').on('click', function () {
+            var cate = $(this).data("cate");
+            var urls = [];
+            var imgs = [];
+            $(this).parent().parent().siblings(".goodsAward").find(".row").each(function () {
+                var url = $(this).find("input[name=url]").val();
+                if (url && "" != url)
+                    urls.push(url);
+                var img = $(this).find("input[name=img]").val();
+                if (img && "" != img)
+                    imgs.push(img);
+            });
+            if ((urls.length > 0 && imgs.length > 0) && (urls.length == imgs.length)) {
+                $.ajax({
+                    url: "banner",
+                    type: "POST",
+                    dataType: "JSON",
+                    traditional: true,
+                    data: {urls: urls, imgs: imgs, cate: cate},
+                    success: function (result) {
+                        if (200 == result.status) {
+                            layer.alert("添加成功!");
+                        }
+                        else {
+                            layer.alert("添加失败!");
+                        }
+                    }
+                })
+            }
+            else {
+                layer.alert("请填写完相关信息");
+            }
+        });
+        function setIcon() {
+            $('.tab-pane').each(function () {
+                var $this = $(this);
+                $this.find('.goodsAward .iconRow').each(function (i) {
+                    $(this).empty();
+                    if (i == $(this).closest('.goodsAward').find('.iconRow').length - 1) {
+                        $(this).append('<i class="fa fa-fw fa-plus add text-success" style="font-size: 20px;cursor: pointer;line-height: 34px"></i>');
+                    }
+                    $(this).append('<i class="fa fa-fw fa-minus remove text-danger" style="font-size: 20px;cursor: pointer;line-height: 34px"></i>');
+                });
+                $this.find('.iconRow i.add').on('click', function () {
+                    var obj = $(this).closest('.row').clone(false, false);
+                    obj.find(".form-control").val("");
+                    obj.find("#preview").empty();
+                    obj.appendTo($(this).closest('.row').parent()).find(".form-control").val("");
+                    //$(this).closest('.row').clone(false,false).appendTo($(this).closest('.row').parent()).find(".form-control").val("");
+                    setIcon();
+                });
+                $this.find('.iconRow i.remove').on('click', function () {
+                    if ($(this).closest('.row').parent().find('.row').length < 2) {
+                        layerP.msg('至少需要保留一项');
+                    } else {
+                        $(this).closest('.row').remove();
+                        setIcon();
+                    }
+                });
+            });
+        }
+
+        setIcon();
+        $('.resetBtn').on('click', function () {
+            var i = layer.confirm('确定要放弃更改吗?', function () {
+                location.reload();
+                layer.close(i);
+            });
+        });
+        $.ajax({
+            url: "banner/list",
+            type: "POST",
+            dataType: "JSON",
+            data: {cate: 0},
+            success: function (result) {
+                if (200 == result.status) {
+                    var datas = result.data;
+                    dataSet("gold", datas);
+                }
+                else
+                    layer.alert(result.msg);
+            }
+        });
+        function dataSet(tag, datas) {
+            for (var i = 1; i < datas.length; i++) {
+                $("#" + tag).find('.goodsAward i.add').click();
+            }
+            for (var i = 0; i < datas.length; i++) {
+                $("#" + tag).find('.goodsAward .row:eq(' + i + ') .url').val(datas[i].url);
+                $("#" + tag).find('.goodsAward .row:eq(' + i + ') .img').val(datas[i].img);
+                var url = '${base}/' + datas[i].img;
+                var img = "<img width=100 height=100 src='" + url + "'>";
+                $("#" + tag).find('.goodsAward .row:eq(' + i + ') #preview').append(img);
+            }
+        }
+    });
+</script>
+</html>

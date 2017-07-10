@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyc.dao.CycVisitorDao">
+    <resultMap id="CycVisitor" type="CycVisitor">
+        <id property="id" column="id" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="name" column="name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" javaType="String" jdbcType="VARCHAR" />
+        <result property="email" column="email" javaType="String" jdbcType="VARCHAR" />
+        <result property="content" column="content" javaType="String" jdbcType="CLOB" />
+        <result property="createTime" column="create_time" javaType="Date" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="save" parameterType="CycVisitor" keyProperty="id" useGeneratedKeys="true" flushCache="true" statementType="PREPARED">
+        <![CDATA[
+            INSERT INTO cyc_visitor(name, phone, email, content, company, create_time) VALUES (#{name}, #{phone}, #{email}, #{content}, #{company}, #{createTime})
+        ]]>
+    </insert>
+</mapper>

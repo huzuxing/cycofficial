@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyc.dao.CycUserLoginLogDao">
+    <resultMap id="CycUserLoginLog" type="CycUserLoginLog">
+        <id property="id" column="id" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="cate" column="cate" javaType="Integer" jdbcType="INTEGER" />
+        <result property="loginTime" column="login_time" javaType="Date" jdbcType="TIMESTAMP" />
+        <result property="loginIp" column="login_ip" javaType="String" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="save" parameterType="CycUserLoginLog" keyProperty="id" useGeneratedKeys="true" flushCache="true" statementType="PREPARED">
+        <![CDATA[
+            INSERT INTO cyc_userlogin_log(cyc_userid, cate, login_time, login_ip) VALUES (#{id}, #{cate}, NOW(), #{loginIp})
+        ]]>
+    </insert>
+    <!--<select id="findOne" parameterType="CycUser" resultType="CycUser">
+        <![CDATA[
+          SELECT * FROM cyc_user o
+        ]]>
+        <where>
+            <if test="null != username">
+                o.username=#{username}
+            </if>
+            <if test="null != password">
+               AND o.password=#{password}
+            </if>
+        </where>
+    </select>-->
+</mapper>

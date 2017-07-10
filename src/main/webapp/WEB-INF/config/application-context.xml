@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <!-- 属性文件扫描 -->
+    <context:property-placeholder location="/WEB-INF/config/jdbc.properties"/>
+
+    <!-- 数据源配置 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!--- 连接属性 -->
+        <property name="url" value="${cyc.druid.jdbcUrl}"/>
+        <property name="username" value="${cyc.druid.username}"/>
+        <property name="password" value="${cyc.druid.password}"/>
+
+        <!--- 初始化大小 -->
+        <property name="initialSize" value="${cyc.druid.initialSize}"/>
+        <property name="maxActive" value="${cyc.druid.maxActive}"/>
+        <property name="minIdle" value="${cyc.druid.minIdle}"/>
+        <property name="maxIdle" value="${cyc.druid.maxIdle}"/>
+        <property name="maxWait" value="${cyc.druid.maxWait}"/>
+
+        <property name="validationQuery" value="${cyc.druid.validationQuery}"/>
+        <property name="testWhileIdle" value="${cyc.druid.testWhileIdle}"/>
+        <property name="testOnBorrow" value="${cyc.druid.testOnBorrow}"/>
+        <property name="testOnReturn" value="${cyc.druid.testOnReturn}"/>
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="${cyc.druid.poolPreparedStatements}"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="${cyc.druid.maxPoolPreparedStatementPerConnectionSize}"/>
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${cyc.druid.timeBetweenEvictionRunsMillis}"/>
+
+        <!-- 统计sql -->
+        <property name="filters" value="${cyc.druid.filters}"/>
+    </bean>
+
+    <!-- sqlSessionFactory配置-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 映射文件 -->
+        <property name="mapperLocations" value="/WEB-INF/mapper/*.xml"/>
+        <!-- 实体类别名 -->
+        <property name="typeAliasesPackage" value="com.cyc.entity"/>
+    </bean>
+    <!-- dao扫描 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.cyc.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+    <!-- 事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+</beans>
